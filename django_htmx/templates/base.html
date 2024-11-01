@@ -1,5 +1,9 @@
 <!DOCTYPE html>
+<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
 <html>
+<!-- Таблица книг -->
+                <form>
+                <table>
 <head>
     <meta charset="utf-8">
     <title>{% block title %}Books{% endblock title %}</title>
@@ -74,6 +78,31 @@
         </div>
     </div>
 </div>
+<script>
+    function cngElementsAtr(cls, atr, val){
+        var elems = document.getElementsByClassName(cls);
+        for(var i = 0; i < elems.length; i++) {
+            elems[i][atr] = val;
+        }
+    }
+    document.body.addEventListener('htmx:afterRequest', (event) => {
+        path_str = event.detail.pathInfo.requestPath;
+        if(path_str.includes('create_book')){
+            cngElementsAtr('clrtxt', 'value', '');
+        }else if(path_str.includes('update_book_details')){
+            if(event.detail.requestConfig.verb === 'get'){
+                cngElementsAtr('disbtn', 'disabled', true);
+            }else{
+                cngElementsAtr('disbtn', 'disabled', false);
+            }
+        }else if(path_str.includes('book_detail')){
+            cngElementsAtr('disbtn', 'disabled', false);
+        }
+    });
+</script>
 
 </body>
 </html>
+</table>
+                </form>
+            </div>
